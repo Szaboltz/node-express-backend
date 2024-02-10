@@ -1,0 +1,26 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "description": "This is my college apiRestfull project",
+  "main": "src/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js"
+  },
+  "keywords": [
+    "express",
+    "node",
+    "javascript",
+    "api",
+    "apirestfull",
+    "npm",
+    "jwt",
+    "zod"
+  ],
+  "author": "Henrique Szabo",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
