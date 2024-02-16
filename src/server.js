@@ -4,6 +4,8 @@ import { users } from "./db/user.js"
 
 const app = express()
 
+app.use(express.json()) // Esse cara é um midware
+
 app.get('/', (req, res) => {
   res.json({
     message: "Hello, world!",
@@ -19,10 +21,39 @@ app.get('/users', (req, res) => {
 })
 
 app.post('/users', (req, res) => {
-  console.log(req)
+  const user = req.body
+  user.id = users[users.length - 1].id + 1
+  users.push(user)
 
   res.json({
-    success: "OK"
+    success: "OK",
+    data: users
+  })
+})
+
+app.delete('/users', (req, res) => {
+  const user = req.body
+  const result = users.filter((data) => data.id != user.id)
+
+  res.json({
+    success: "OK",
+    data: result
+  })
+})
+
+app.put('/users', (req, res) => {
+  const user = req.body;
+  const result = users.map((data) => {
+    if (data.id == user.id) {
+       data.name = user.name;
+       data.email = user.email || data.email
+    }
+    return data; 
+  });
+
+  res.json({
+    success: "OK",
+    data: result
   })
 })
 
