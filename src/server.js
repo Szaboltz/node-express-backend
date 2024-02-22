@@ -1,10 +1,12 @@
 import express from "express"
 import ENV from "./config.js"
-import { users } from "./db/user.js"
+import users  from "./db/user.js"
+import logger from "./middlewares/logger.js"
 
 const app = express()
 
 app.use(express.json()) // Esse cara é um midware
+app.use(logger)  // Middleware global para todos os users
 
 app.get('/', (req, res) => {
   res.json({
@@ -13,7 +15,7 @@ app.get('/', (req, res) => {
   })
 })
 
-app.get('/users', (req, res) => {
+app.get('/users', logger, (req, res) => { // Middleware inline 
   res.json({
     success: "OK",
     data: users
