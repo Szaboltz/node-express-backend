@@ -1,7 +1,8 @@
 import express from "express";
-import users from "../db/user";
+import users from "../db/user.js";
+import logger from "../middlewares/logger.js"
 
-const router = express.router()
+const router = express.Router()
 
 router.get('/', logger, (req, res) => { // Middleware inline 
   res.json({

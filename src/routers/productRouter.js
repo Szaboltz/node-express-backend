@@ -1,7 +1,8 @@
 import express from "express";
-import products from "../db/product";
+import products from "../db/product.js";
+import logger from "../middlewares/logger.js"
 
-const router = express.router()
+const router = express.Router()
 
 router.get('/', logger, (req, res) => { // Middleware inline 
   res.json({
