@@ -1,51 +1,17 @@
 import express from "express";
-import products from "../db/product.js";
-import logger from "../middlewares/logger.js"
+import listAll from "../controllers/product/listAll.js";
+import create from "../controllers/product/create.js";
+import update from "../controllers/product/update.js";
+import remove from "../controllers/product/remove.js";
 
 const router = express.Router()
 
-router.get('/', logger, (req, res) => { // Middleware inline 
-  res.json({
-    success: "OK",
-    data: products
-  })
-})
+router.get('/', listAll)
 
-router.post('/', (req, res) => {
-  const product = req.body
-  product.id = products[products.length - 1].id + 1
-  products.push(product)
+router.post('/', create)
 
-  res.json({
-    success: "OK",
-    data: products
-  })
-})
+router.delete('/', remove)
 
-router.delete('/', (req, res) => {
-  const product = req.body
-  const result = products.filter((data) => data.id != product.id)
-
-  res.json({
-    success: "OK",
-    data: result
-  })
-})
-
-router.put('/', (req, res) => {
-  const product = req.body;
-  const result = products.map((data) => {
-    if (data.id == product.id) {
-       data.name = product.name;
-       data.email = product.email || data.email
-    }
-    return data; 
-  });
-
-  res.json({
-    success: "OK",
-    data: result
-  })
-})
+router.put('/', update)
 
 export default router
