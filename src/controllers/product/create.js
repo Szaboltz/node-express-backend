@@ -1,4 +1,5 @@
 import productModel from "../../models/productModel.js"
+import userModel from "../../models/userModel.js"
 
 
 const create = (req, res) => {

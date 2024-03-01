@@ -1,6 +1,17 @@
 import users from "../db/user.js"
+import { z } from "zod"
+
+const USER_SCHEMA = z.object({
+  id: z.number().int(),
+  name: z.string().min(3).max(200),
+  email: z.string().email()
+})
 
 const userModel = {
+  validateCreate: (data) => {
+    const partialSchema = USER_SCHEMA.partial({id: true})
+    return partialSchema.safeParse(data)
+  },
   list: () => {
     return users
   },
