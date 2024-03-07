@@ -22,6 +22,7 @@
   "author": "Henrique Szabo",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "zod": "^3.22.4"
   }
 }
