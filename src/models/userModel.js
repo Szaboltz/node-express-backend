@@ -2,9 +2,31 @@ import users from "../db/user.js"
 import { z } from "zod"
 
 const USER_SCHEMA = z.object({
-  id: z.number().int(),
-  name: z.string().min(3).max(200),
-  email: z.string().email()
+  id: z
+  .number({
+    invalid_type_error: "O id deve ser um número",
+    required_error: "O id é obrigatório"
+  })
+  .int(),
+  name: z
+  .string({
+    invalid_type_error: "O id deve ser uma string",
+    required_error: "O nome é obrigatório"
+  })
+  .min(3, { 
+    message: "O nome do usuário deve conter no mínimo 3 caracteres!" 
+  })
+  .max(200, {
+    message: "O Nome do usuário deve contem no máximo 200 caracteres"
+  }),
+  email: z
+  .string({
+    invalid_type_error: "O email deve ser uma string",
+    required_error: "O email é obrigatório"
+  })
+  .email({
+    message: "Email inválido!"
+  })
 })
 
 const userModel = {
@@ -20,6 +42,9 @@ const userModel = {
     users.push(data)
     return users
   },
+  validateUpdate: (data) => {
+    return USER_SCHEMA.safeParse(data)
+  },
   update: (data) => {
       return users.map((user) => {
         if (user.id == data.id) {
@@ -28,6 +53,13 @@ const userModel = {
         }
         return user
     })
+  },
+  validateId: (id) => {
+    const partialSchema = USER_SCHEMA.partial({
+      name: true,
+      email: true
+    })
+    return partialSchema.safeParse(id)
   },
   remove: (id) => {
     return users.filter((data) => data.id != id)

@@ -1,8 +1,15 @@
 import productModel from "../../models/productModel.js"
 
 const remove = (req, res) => {
-  const id = req.body.id
-  const result = productModel.remove(id)
+  const id = req.body
+  const validatedData = productModel.validateIdlgi(id)
+	if(!validatedData.success){
+		return res.status(400).json({
+			error: "Dados Inválidos!",
+			fields: validatedData.error.flatten().fieldErrors
+		})
+	}
+  const result = productModel.remove(validatedData.data.id)
 
   res.json({
     success: "OK",
