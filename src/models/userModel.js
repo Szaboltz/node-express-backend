@@ -38,7 +38,7 @@ const userModel = {
     return users
   },
   getById: (id) => {
-    return users.find((data) => data.id === id)
+    return users.find((data) => data.id === id) 
   },
   create: (data) => {
     data.id = users[users.length - 1].id + 1
