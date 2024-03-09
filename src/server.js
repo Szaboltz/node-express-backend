@@ -7,8 +7,7 @@ import productRounter from "./routers/productRouter.js"
 const app = express()
 
 app.use(express.json()) // Esse cara é um midware
-app.use(logger)  // Middleware global para todos os users
-
+app.use(logger)  // Middleware global para todos os users 
 app.use("/users", userRouter)
 app.use("/products", productRounter)
 
