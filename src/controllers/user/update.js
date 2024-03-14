@@ -1,4 +1,5 @@
 import userModel from "../../models/userModel.js";
+
 const update = (req, res) => {
   const user = {...req.body, id: +req.params.id} // O + converte de str para number
   const validatedData = userModel.validateUpdate(user)

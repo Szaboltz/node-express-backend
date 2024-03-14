@@ -34,6 +34,9 @@ const productModel = {
     const partialSchema = PRODUCT_SCHEMA.partial({id: true})
     return partialSchema.safeParse(data)
   },
+  getBtID: (id) => {
+    return products.find((data) => data.id === id)
+  },
   create: (data) => {
     data.id = products[products.length - 1].id + 1
     products.push(data)
