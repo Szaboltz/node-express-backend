@@ -1,5 +1,6 @@
 import userModel from "../../models/userModel.js";
-const update = (req, res) => {
+
+const update = async (req, res) => {
   const user = {...req.body, id: +req.params.id} // O + converte de str para number
   const validatedData = userModel.validateUpdate(user)
 	if(!validatedData.success){
@@ -8,7 +9,7 @@ const update = (req, res) => {
 			fields: validatedData.error.flatten().fieldErrors
 		})
 	}
-  const result = userModel.update(validatedData.data);
+  const result = await userModel.update(validatedData.data);
 
   res.json({
     success: "OK",

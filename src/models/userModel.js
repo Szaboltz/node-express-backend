@@ -1,5 +1,7 @@
-import users from "../db/user.js"
 import { z } from "zod"
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const USER_SCHEMA = z.object({
   id: z
@@ -34,27 +36,28 @@ const userModel = {
     const partialSchema = USER_SCHEMA.partial({id: true})
     return partialSchema.safeParse(data)
   },
-  list: () => {
-    return users
+  list: async () => {
+    return await prisma.user.findMany()
   },
-  getById: (id) => {
-    return users.find((data) => data.id === id) 
+  getById: async (id) => {
+    return await prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    }) 
   },
-  create: (data) => {
-    data.id = users[users.length - 1].id + 1
-    users.push(data)
-    return users
+  create: async (data) => {
+    return await prisma.user.create({data})
   },
   validateUpdate: (data) => {
     return USER_SCHEMA.safeParse(data)
   },
-  update: (data) => {
-      return users.map((user) => {
-        if (user.id == data.id) {
-          user.name = data.name || user.name;
-          user.email = data.email || user.email
-        }
-        return user
+  update: async (data) => {
+    return await prisma.user.update({
+      where: {
+         id: data.id
+      },
+      data: data
     })
   },
   validateId: (id) => {
@@ -64,8 +67,12 @@ const userModel = {
     })
     return partialSchema.safeParse(id)
   },
-  remove: (id) => {
-    return users.filter((data) => data.id != id)
+  remove: async (id) => {
+    return await prisma.user.delete({
+      where: {
+        id: id
+      }
+    })
   }
 }
 

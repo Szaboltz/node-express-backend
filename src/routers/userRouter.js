@@ -10,11 +10,8 @@ const router = express.Router()
 
 router.get('/', logger, listAll)
 router.get('/:id', getByIdController)
-
 router.post('/', create)
-
 router.delete('/:id', remove)
-
 router.put('/:id', update)
 
 export default router
