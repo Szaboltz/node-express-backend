@@ -1,9 +1,9 @@
 import userModel from "../../models/userModel.js"
 
-const listAll = (req, res) => { 
+const listAll = async (__, res) => { 
   res.json({
     success: "OK",
-    data: userModel.list()
+    data: await userModel.list()
   })
 }
 
