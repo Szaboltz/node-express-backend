@@ -1,4 +1,3 @@
-import users from "../db/user.js"
 import { z } from "zod"
 import { PrismaClient } from '@prisma/client'
 
@@ -40,8 +39,12 @@ const userModel = {
   list: async () => {
     return await prisma.user.findMany()
   },
-  getById: (id) => {
-    return users.find((data) => data.id === id) 
+  getById: async (id) => {
+    return await prisma.user.findUnique({
+      where: {
+        id: id
+      }
+    }) 
   },
   create: async (data) => {
     return await prisma.user.create({data})
@@ -49,13 +52,12 @@ const userModel = {
   validateUpdate: (data) => {
     return USER_SCHEMA.safeParse(data)
   },
-  update: (data) => {
-      return users.map((user) => {
-        if (user.id == data.id) {
-          user.name = data.name || user.name;
-          user.email = data.email || user.email
-        }
-        return user
+  update: async (data) => {
+    return await prisma.user.update({
+      where: {
+         id: data.id
+      },
+      data: data
     })
   },
   validateId: (id) => {
@@ -65,8 +67,12 @@ const userModel = {
     })
     return partialSchema.safeParse(id)
   },
-  remove: (id) => {
-    return users.filter((data) => data.id != id)
+  remove: async (id) => {
+    return await prisma.user.delete({
+      where: {
+        id: id
+      }
+    })
   }
 }
 

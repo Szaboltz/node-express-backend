@@ -1,5 +1,8 @@
 import products from "../db/product.js"
 import { z } from "zod"
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const PRODUCT_SCHEMA = z.object({
   id: z
@@ -27,32 +30,33 @@ const PRODUCT_SCHEMA = z.object({
 }) 
 
 const productModel = {
-  listAll: () => {
-    return products
+  listAll: async () => {
+    return await prisma.product.findMany()
   },
   validateCreate: (data) => {
     const partialSchema = PRODUCT_SCHEMA.partial({id: true})
     return partialSchema.safeParse(data)
   },
-  getBtID: (id) => {
-    return products.find((data) => data.id === id)
+  getBtID: async (id) => {
+    return await prisma.product.findUnique({
+      where: {
+        id: id
+      }
+    })
   },
-  create: (data) => {
-    data.id = products[products.length - 1].id + 1
-    products.push(data)
-    return products
+  create: async (data) => {
+    return await prisma.product.create({data})
   },
   validateUpdate: (data) => {
     return PRODUCT_SCHEMA.safeParse(data)
   },
-  update: (data) => {
-    return products.map((product) => {
-      if (product.id == data.id) {
-        product.name = data.name || product.name;
-        product.email = data.email || product.email
-      }
-      return product; 
-    });
+  update: async (data) => {
+    return await prisma.product.update({
+      where: {
+        id: data.id
+      },
+      data: data
+    })
   },
   validateId: (id) => {
     const partialSchema = PRODUCT_SCHEMA.partial({
@@ -61,8 +65,12 @@ const productModel = {
     })
     return partialSchema.safeParse(id)
   },
-  remove: (id) => {
-    return products.filter((data) => data.id != id)
+  remove: async (id) => {
+    return await prisma.product.delete({
+      where: {
+        id: id
+      }
+    })
   }
 }
 
