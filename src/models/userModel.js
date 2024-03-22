@@ -28,7 +28,13 @@ const USER_SCHEMA = z.object({
   })
   .email({
     message: "Email inválido!"
+  }),
+  password: z
+  .string({
+    invalid_type_error: "O email deve ser uma string",
+    required_error: "A senha é obrigatório"
   })
+  .min(6, {message: 'A senha deve ter no mínimo 6 caracteres'})
 })
 
 const userModel = {
@@ -37,7 +43,13 @@ const userModel = {
     return partialSchema.safeParse(data)
   },
   list: async () => {
-    return await prisma.user.findMany()
+    return await prisma.user.findMany({
+      select: {
+        password: false,
+        name: true,
+        email: true
+      }
+    })
   },
   getById: async (id) => {
     return await prisma.user.findUnique({
@@ -50,7 +62,8 @@ const userModel = {
     return await prisma.user.create({data})
   },
   validateUpdate: (data) => {
-    return USER_SCHEMA.safeParse(data)
+    const partialSchema = USER_SCHEMA.partial({password: true})
+    return partialSchema
   },
   update: async (data) => {
     return await prisma.user.update({
@@ -73,6 +86,13 @@ const userModel = {
         id: id
       }
     })
+  },
+  getByEmail: async () => {
+    return await prisma.user.findUnique({
+      where: {
+        email: true
+      }
+    })  
   }
 }
 
