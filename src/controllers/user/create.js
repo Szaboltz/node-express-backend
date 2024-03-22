@@ -1,4 +1,5 @@
 import userModel from "../../models/userModel.js"
+import { hash } from "bcrypt"
 
 const create = async (req, res) => {
   const user = req.body
@@ -9,8 +10,10 @@ const create = async (req, res) => {
       fields: validatedData.error.flatten().fieldErrors
     })
   }
-  const result = await userModel.create(user)
 
+  validatedData.data.password = hash(validatedData.data.password, 10)
+  const result = await userModel.create(validatedData.data)
+  delete result.password
   res.json({
     success: "OK",
     data: result

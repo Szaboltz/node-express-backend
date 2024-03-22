@@ -1,4 +1,3 @@
-import products from "../db/product.js"
 import { z } from "zod"
 import { PrismaClient } from '@prisma/client'
 
