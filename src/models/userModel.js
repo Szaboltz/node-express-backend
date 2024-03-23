@@ -31,16 +31,28 @@ const USER_SCHEMA = z.object({
   }),
   password: z
   .string({
-    invalid_type_error: "O email deve ser uma string",
+    invalid_type_error: "A senha deve ser uma string",
     required_error: "A senha é obrigatório"
   })
-  .min(6, {message: 'A senha deve ter no mínimo 6 caracteres'})
+  .min(6, { message: 'A senha deve ter no mínimo 6 caracteres' })
 })
 
 const userModel = {
   validateCreate: (data) => {
     const partialSchema = USER_SCHEMA.partial({id: true})
     return partialSchema.safeParse(data)
+  },
+  validateUpdate: (data) => {
+    const partialSchema = USER_SCHEMA.partial({password: true})
+    return partialSchema.safeParse(data)
+  },
+  validateId: (id) => {
+    const partialSchema = USER_SCHEMA.partial({
+      name: true,
+      email: true,
+      password: true
+    })
+    return partialSchema.safeParse(id)
   },
   list: async () => {
     return await prisma.user.findMany({
@@ -61,24 +73,19 @@ const userModel = {
   create: async (data) => {
     return await prisma.user.create({data})
   },
-  validateUpdate: (data) => {
-    const partialSchema = USER_SCHEMA.partial({password: true})
-    return partialSchema
-  },
   update: async (data) => {
     return await prisma.user.update({
       where: {
          id: data.id
       },
-      data: data
+      data: data,
+      select:{
+        id: true,
+        name: true,
+        email: true,
+        password: false,
+      }
     })
-  },
-  validateId: (id) => {
-    const partialSchema = USER_SCHEMA.partial({
-      name: true,
-      email: true
-    })
-    return partialSchema.safeParse(id)
   },
   remove: async (id) => {
     return await prisma.user.delete({
@@ -87,10 +94,10 @@ const userModel = {
       }
     })
   },
-  getByEmail: async () => {
+  getByEmail: async (email) => {
     return await prisma.user.findUnique({
       where: {
-        email: true
+        email: email
       }
     })  
   }
