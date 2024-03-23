@@ -10,8 +10,7 @@ const create = async (req, res) => {
       fields: validatedData.error.flatten().fieldErrors
     })
   }
-
-  validatedData.data.password = hash(validatedData.data.password, 10)
+  validatedData.data.password = await hash(validatedData.data.password, 10)
   const result = await userModel.create(validatedData.data)
   delete result.password
   res.json({
