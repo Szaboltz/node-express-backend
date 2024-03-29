@@ -9,6 +9,7 @@ const auth = (req, res, next) => {
   })
 
   jwt.verify(token, SECRET_KEY, (error, decoded) => {
+    // TODO: Verificar tipo de erro para status code específica
     if(error) return res.status(401).json({
       error: error.message, 
       code: "token-not-found"

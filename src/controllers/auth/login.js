@@ -2,6 +2,9 @@ import userModel from "../../models/userModel.js"
 import { compare } from 'bcrypt'
 import jwt from "jsonwebtoken"
 import { SECRET_KEY } from "../../config.js"
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const login = async (req, res) => {
   const {email, password} = req.body
@@ -35,6 +38,15 @@ const login = async (req, res) => {
   )
 
   // TODO: Gerar Cookie para a web
+
+  const session = await prisma.session.create({
+    data: {
+      user_id: userFound.id,
+      // TODO: pegar header User-Agent
+      client: "API DOG",
+      token: refreshToken
+    }
+  })
   
   delete userFound.password
   return res.json({
