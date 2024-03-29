@@ -4,11 +4,16 @@ import logger from "./middlewares/logger.js"
 import userRouter from "./routers/userRouter.js"
 import productRounter from "./routers/productRouter.js"
 import authRounter from "./routers/authRouter.js"
+import auth from "./middlewares/auth.js"
 
 const app = express()
 
 app.use(express.json()) // Esse cara é um midware
 app.use(logger)  // Middleware global para todos os users 
+
+app.get("/", (req, res) => {
+  res.json({message: `Bem vindo!`})
+})
 
 app.use("/users", userRouter)
 app.use("/products", productRounter)
