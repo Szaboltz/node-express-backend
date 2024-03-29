@@ -28,9 +28,6 @@ const login = async (req, res) => {
       {expiresIn: '1m', algorithm: 'HS256'} // Expire time
     )
 
-  console.log(accessToken)
-
-
   const refreshToken = jwt.sign(
     {id: userFound.id},
     SECRET_KEY, // Secret Key to validate

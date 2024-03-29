@@ -7,20 +7,18 @@ const prisma = new PrismaClient()
 
 
 const refreshToken = (req, res) => {
-  let token = false
   // TODO: Obter cookie refreshToken
-  const authorization = req.headers?.authorization
-  if(authorization) token = authorization.split(' ')[1]
+  const authorization = req.headers.authorization?.split(' ')[1]
 
-  if (!token) return res.status(401).json({
+  if (!authorization) return res.status(401).json({
     error: "Usuario não autenticado", 
-    code: "token-not-found"
+    code: "refresh-token-not-found"
   })
 
   jwt.verify(token, SECRET_KEY, async (error, decoded) => {
     if(error) return res.status(401).json({
       error: error.message, 
-      code: "invalid-token"
+      code: "invalid-refresh-token"
     })
 
     const userFound = await userModel.getById(decoded.id)
@@ -31,7 +29,7 @@ const refreshToken = (req, res) => {
       }
     })
 
-    if (!sessionFound.id) return res.status(401).json({
+    if (!sessionFound) return res.status(401).json({
       code: "session deprecaded"
     })
 
@@ -48,8 +46,8 @@ const refreshToken = (req, res) => {
 
     await prisma.session.update({
       where: {
-        id: userFound.id,
-        token: token
+        token: token,
+        user_id: userFound.id
       },
       data: {
         token: refreshToken
@@ -63,11 +61,7 @@ const refreshToken = (req, res) => {
       accessToken: accessToken,
       refreshToken: refreshToken
     })
-    
   })
-
-
-  next()
 
   return true
 }

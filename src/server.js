@@ -4,7 +4,6 @@ import logger from "./middlewares/logger.js"
 import userRouter from "./routers/userRouter.js"
 import productRounter from "./routers/productRouter.js"
 import authRounter from "./routers/authRouter.js"
-import auth from "./middlewares/auth.js"
 
 const app = express()
 
